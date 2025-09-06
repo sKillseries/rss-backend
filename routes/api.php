@@ -20,3 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/articles', [ArticleController::class, 'index']);
+Route::patch('/articles/{id}/read', [ArticleController::class, 'markAsRead']);
+Route::post('/articles/{id}/favorite', [ArticleController::class, 'addFavorite']);
+Route::get('/favorites', [ArticleController::class, 'listFavorites']);

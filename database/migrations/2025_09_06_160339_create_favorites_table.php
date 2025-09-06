@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->text('link');
-            $table->text('source');
-            $table->timestamp('pub_date');
-            $table->text('category');
-            $table->boolean('is_read')->default(false);
+            $table->unsignedBigInteger('article_id');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('favorites');
     }
 };
