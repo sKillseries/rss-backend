@@ -8,30 +8,40 @@ use App\Models\Favorite;
 
 class ArticleController extends Controller
 {
-    //
+    // Listes des articles avec filtres (catégorie, recherche, tri).
+
     public function index(Request $request)
     {
-        $query = Article::orderBy('pub_date', 'desc');
+        $query = Article::query();
 
-        if ($request->has('category')) {
+        // Filtre par catégorie
+        if ($request->has('category') && !empty($request->category)) {
             $query->where('category', $request->category);
         }
 
-        return $query->get();
-
-        if ($request->has('q')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', "%{$request->q}%")
-                  ->orWhere('description', 'like', "%{$request->q}$");
+        // Recherche par mots-clés (dans titre + description)
+        if ($request->has('q') && !empty($request->q)) {
+            $search = $request->q;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}$");
             });
         }
 
-        if ($request->has('sort')) {
+        // Tri dynamique
+        if ($request->has('sort') && !empty($request->sort)) {
             $sort = $request->sort;
             if (in_array($sort, ['title', 'source', 'pub_date'])) {
                 $query->orderBy($sort, 'asc');
             }
+        } else {
+            // Tri par défaut : date DESC
+            $query->orderBy('pub_date', 'desc');
         }
+
+        // Récupération
+        $articles = $query->get();
+        return response()->json($articles);
 
     }
 
