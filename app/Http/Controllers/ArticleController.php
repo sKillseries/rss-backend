@@ -47,15 +47,40 @@ class ArticleController extends Controller
 
     public function markAsRead($id)
     {
-        $article = Article::findOrFail($id);
+        $article = Article::find($id);
+
+        if (!article) {
+            return response()->json(['error' => 'Article introuvable'], 404);
+        }
+
+        if ($article->is_read) {
+            return response()->json(['message' => 'Déjà marqué comme lu'], 200);
+        }
+
         $article->update(['is_read' => true]);
-        return response()->json(['message' => 'Article marqué comme lu']);
+
+        return response()->json([
+            'message' => 'Article marqué comme lu',
+            'article' => $article
+        ], 200);
     }
 
     public function addFavorites($id)
     {
-        Favorite::firstOrCreate(['article_id' => $id]);
-        return response()->json(['message' => 'Ajouté aux favoris']);
+        $article = Article::find($id);
+
+        if (!article) {
+            return response()->json(['error' => 'Article introuvable'], 404);
+        }
+
+        $favorite = Favorite::firstOrCreate(['article_id' => $id]);
+
+        return response()->json([
+            'message' => $favorite->wasRecentlyCreated
+                ? 'Ajouté aux favoris'
+                : 'Déjà présent dans les favoris',
+            'favorite' => $favorite
+        ], 200);
     }
 
     public function listFavorites()

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('pub_date');
             $table->text('category');
             $table->boolean('is_read')->default(false);
+            $table->boolean('is_favorite')->default(false);
         });
     }
 
