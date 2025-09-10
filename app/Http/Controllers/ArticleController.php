@@ -49,7 +49,7 @@ class ArticleController extends Controller
     {
         $article = Article::find($id);
 
-        if (!article) {
+        if (!$article) {
             return response()->json(['error' => 'Article introuvable'], 404);
         }
 
@@ -65,11 +65,11 @@ class ArticleController extends Controller
         ], 200);
     }
 
-    public function addFavorites($id)
+    public function addFavorite($id)
     {
         $article = Article::find($id);
 
-        if (!article) {
+        if (!$article) {
             return response()->json(['error' => 'Article introuvable'], 404);
         }
 

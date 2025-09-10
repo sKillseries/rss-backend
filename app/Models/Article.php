@@ -17,5 +17,6 @@ class Article extends Model
         'pub_date',
         'category',
         'is_read',
+        'is_favorite',
     ];
 }
