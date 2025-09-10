@@ -9,6 +9,10 @@ class Article extends Model
 {
     use HasFactory;
 
+    protected $table = 'articles';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'title',
         'description',
