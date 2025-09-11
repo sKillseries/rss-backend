@@ -23,3 +23,4 @@ Route::get('/articles', [ArticleController::class, 'index']);
 Route::patch('/articles/{id}/read', [ArticleController::class, 'markAsRead']);
 Route::post('/articles/{id}/favorite', [ArticleController::class, 'addFavorite']);
 Route::get('/favorites', [ArticleController::class, 'listFavorites']);
+Route::delete('/favorites/{id}', [ArticleController::class, 'removeFavorite']);

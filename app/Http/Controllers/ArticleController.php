@@ -87,4 +87,17 @@ class ArticleController extends Controller
     {
         return Favorite::with('article')->get();
     }
+
+    public function removeFavorite($id)
+    {
+        $favorite = Favorite::find($id);
+
+        if (!$favorite) {
+            return response()->json(['error' => 'Favori introuvable'], 404);
+        }
+
+        $favorite->delete();
+
+        return response()->json(['message' => 'Favori supprimé avec succès'], 200);
+    }
 }
