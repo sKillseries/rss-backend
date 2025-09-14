@@ -57,7 +57,8 @@ class ArticleController extends Controller
             return response()->json(['message' => 'Déjà marqué comme lu'], 200);
         }
 
-        $article->update(['is_read' => true]);
+        $article->is_read = true;
+        $article->save();
 
         return response()->json([
             'message' => 'Article marqué comme lu',
@@ -69,9 +70,17 @@ class ArticleController extends Controller
     {
         $article = Article::find($id);
 
+
         if (!$article) {
             return response()->json(['error' => 'Article introuvable'], 404);
         }
+
+        if ($article->is_favorite) {
+            return response()->json(['message' => 'Déjà présent dans les favoris'], 200);
+        }
+
+        $article->is_favorite = true;
+        $article->save();
 
         $favorite = Favorite::firstOrCreate(['article_id' => $id]);
 
@@ -96,8 +105,18 @@ class ArticleController extends Controller
             return response()->json(['error' => 'Favori introuvable'], 404);
         }
 
+        // Mettre à jour l'article associé
+        $article = Article::find($favorite->article_id);
+        if ($article) {
+            $article->is_favorite = false;
+            $article->save();
+        }
+
         $favorite->delete();
 
-        return response()->json(['message' => 'Favori supprimé avec succès'], 200);
+        return response()->json([
+            'message' => 'Favori supprimé avec succès',
+            'article' => $article
+        ], 200);
     }
 }
